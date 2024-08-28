@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: nodeserver
-        image: dpuja/deployrepo:latest
+        image: dpuja/nodeapp:latest
         ports:
         - containerPort: 3000
         
