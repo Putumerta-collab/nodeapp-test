@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "dpuja/deployrepo"
+    dockerimagename = "dpuja/nodeapp"
     dockerImage = ""
   }
 
