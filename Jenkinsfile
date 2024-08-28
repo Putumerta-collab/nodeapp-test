@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "thetips4you/nodeapp"
+    dockerimagename = "dpuja/deployrepo"
     dockerImage = ""
   }
 
@@ -11,7 +11,7 @@ pipeline {
 
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/shazforiot/nodeapp_test.git'
+        git 'https://github.com/Putumerta-collab/nodeapp-test.git'
       }
     }
 
@@ -25,7 +25,7 @@ pipeline {
 
     stage('Pushing Image') {
       environment {
-               registryCredential = 'dockerhublogin'
+               registryCredential = 'PUJAREPO'
            }
       steps{
         script {
@@ -39,7 +39,7 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
+          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "Kubernetes")
         }
       }
     }
