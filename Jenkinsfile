@@ -1,6 +1,7 @@
 pipeline {
 
   environment {
+    KUBECONFIG = credentials('kubeconfig-credentials-id')
     dockerimagename = "dpuja/nodeapp"
     dockerImage = ""
   }
@@ -39,7 +40,7 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubeconfig-credentials-id")
+          sh 'kubectl apply -f deploymentservice.yml'
         }
       }
     }
