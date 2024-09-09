@@ -41,7 +41,6 @@ pipeline {
       steps {
         script {
           sh 'kubectl apply -f deploymentservice.yml'
-          sh 'kubectl rollout status deployment/deploymentservice.yml'
 
         }
       }
