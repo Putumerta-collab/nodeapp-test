@@ -2,7 +2,7 @@ pipeline {
 
   environment {
     KUBECONFIG = credentials('kubeconfig-credentials-id')
-    dockerimagename = "dpuja/nodeapp"
+    dockerimagename = "dpuja/testty"
     dockerImage = ""
   }
 
