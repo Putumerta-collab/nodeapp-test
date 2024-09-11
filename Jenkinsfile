@@ -26,8 +26,8 @@ pipeline {
 
     stage('Pushing Image') {
       environment {
-               registryCredential = 'PUJAREPO'
-           }
+        registryCredential = 'PUJAREPO'
+      }
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
@@ -40,12 +40,24 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          sh 'kubectl apply -f deploymentservice.yml'
-
+          withCredentials([file(credentialsId: "kubeconfig-credentials-id", variable: 'KUBECONFIG')]) {
+            // Update deployment Kubernetes dengan image baru
+            sh """
+            kubectl --kubeconfig=$KUBECONFIG set image deployment/my-app-deployment my-app-deployment=${dockerimagename}:latest -n default
+            kubectl --kubeconfig=$KUBECONFIG rollout status deployment/my-app-deployment -n default
+            """
+          }
         }
       }
     }
 
+  }
+
+  post {
+    always {
+      // Optional cleanup steps
+      sh 'docker system prune -f'
+    }
   }
 
 }
