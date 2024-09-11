@@ -40,13 +40,9 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          withCredentials([file(credentialsId: "kubeconfig-credentials-id", variable: 'KUBECONFIG')]) {
-            // Update deployment Kubernetes dengan image baru
-            sh """
-            kubectl --kubeconfig=$KUBECONFIG set image deployment/my-app-deployment my-app-deployment=${dockerimagename}:latest -n default
-            kubectl --kubeconfig=$KUBECONFIG rollout status deployment/my-app-deployment -n default
-            """
-          }
+          sh 'kubectl delete -f deploymentservice.yml'
+          sh 'kubectl apply -f deploymentservice.yml'
+
         }
       }
     }
