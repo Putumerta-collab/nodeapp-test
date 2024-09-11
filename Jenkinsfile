@@ -39,11 +39,12 @@ pipeline {
       steps {
         script {
           withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
-            // Update Kubernetes deployment with the new image
-            sh """
-            kubectl --kubeconfig=$KUBECONFIG set image deployment/my-app-deployment my-app-container=${dockerimagename}:latest -n default
-            kubectl --kubeconfig=$KUBECONFIG rollout status deployment/my-app-deployment -n default
-            """
+            // Set the KUBECONFIG environment variable
+            env.KUBECONFIG = "${KUBECONFIG}"
+            
+            // Execute the Kubernetes commands
+            sh 'kubectl set image deployment/my-app-deployment my-app-container=${dockerimagename}:latest -n default'
+            sh 'kubectl rollout status deployment/my-app-deployment -n default'
           }
         }
       }
