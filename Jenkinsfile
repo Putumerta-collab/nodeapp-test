@@ -1,7 +1,9 @@
 pipeline {
 
   environment {
+    KUBECONFIG = credentials('kubeconfig-credentials-id')
     dockerimagename = "dpuja/nodeapp"
+    dockerImage = ""
   }
 
   agent any
@@ -14,38 +16,32 @@ pipeline {
       }
     }
 
-    stage('Build Image') {
-      steps {
+    stage('Build image') {
+      steps{
         script {
-          dockerImage = docker.build(dockerimagename)
+          dockerImage = docker.build dockerimagename
         }
       }
     }
 
-    stage('Push Image') {
+    stage('Pushing Image') {
       environment {
         registryCredential = 'PUJAREPO'
       }
-      steps {
+      steps{
         script {
-          docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
             dockerImage.push("latest")
           }
         }
       }
     }
 
-    stage('Deploy App to Kubernetes') {
+    stage('Deploying App to Kubernetes') {
       steps {
         script {
-          withCredentials([file(credentialsId: 'kubeconfig-credentials-id', variable: 'KUBECONFIG')]) {
-            // Set the KUBECONFIG environment variable
-            env.KUBECONFIG = "${KUBECONFIG}"
-            
-            // Execute the Kubernetes commands
-            sh 'kubectl set image deployment/my-app-deployment my-app-container=${dockerimagename}:latest -n default'
-            sh 'kubectl rollout status deployment/my-app-deployment -n default'
-          }
+          sh 'kubectl apply -f deploymentservice.yml'
+
         }
       }
     }
