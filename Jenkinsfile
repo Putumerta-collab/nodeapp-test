@@ -40,7 +40,7 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-
+          sh 'kubectl delete -f deploymentservice.yml'
           sh 'kubectl apply -f deploymentservice.yml'
 
         }
