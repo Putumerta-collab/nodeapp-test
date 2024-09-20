@@ -42,6 +42,7 @@ pipeline {
         script {
           sh 'kubectl delete -f deploymentservice.yml'
           sh 'kubectl apply -f deploymentservice.yml'
+           sh 'kubectl get pods'
 
         }
       }
